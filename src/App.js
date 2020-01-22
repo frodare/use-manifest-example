@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import './App.css'
+import { Manifest, useCell } from 'use-manifest'
+import fetch from './fetch'
+import 'use-manifest/dist/index.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import users from './services/users'
+
+import UserManifest from './manifests/UserManifest'
+
+/*
+
+const CustomCell = ({ columnIndex, rowIndex }) => {
+  const { value } = useCell({ columnIndex, rowIndex })
+
+  return <>{value ? 'Y' : 'N'}</>
 }
 
-export default App;
+const def = [
+  { id: 'id', label: 'ID', sortable: true },
+  { id: 'name', label: 'Name', sortable: true },
+  { id: 'active', sortable: true, headerComponent: () => <>Active</>, cellComponent: CustomCell }
+]
+
+const App = () => {
+
+  const [filter, setFilter] = useState()
+  return (
+    <div className='App'>
+      <div>
+        <button onClick={() => setFilter(true)}>Active</button>
+        <button onClick={() => setFilter(false)}>Inactive</button>
+        <button onClick={() => setFilter()}>All</button>
+      </div>
+      <Manifest fetch={fetch} filter={{ active: filter }} definition={def} />
+    </div>
+  )
+}
+*/
+
+export default () => <UserManifest />
