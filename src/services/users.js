@@ -60,7 +60,6 @@ const sortData = sorts => {
 }
 
 export const compileResult = (filter, meta) => {
-  console.log({filter, meta})
   if (!data) buildData()
   sortData(meta.sorts)
   return {
@@ -69,6 +68,8 @@ export const compileResult = (filter, meta) => {
   }
 }
 
+const delay = 1000 // 300
+
 export default (filter = {}, meta={}) => new Promise((resolve, reject) => {
-  window.setTimeout(() => resolve(compileResult(filter, meta)), 300 + chance.integer({min: 0, max: 300}))
+  window.setTimeout(() => resolve(compileResult(filter, meta)), 500 + chance.integer({min: 0, max: delay}))
 })

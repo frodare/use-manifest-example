@@ -4,10 +4,23 @@ import { Manifest, useCell, DefaultManifestTable, Debug } from 'use-manifest'
 import users from '../../services/users'
 import def from './definition'
 
+const count = 1000
 
-const fetchRows = async () => [{firstName: 'Howdy'}, {lastName: 'Boo'}]
+// const fetchRows = async (...args) => console.log('fetching rows', ...args) || new Array(count).fill(null).map((_,i) => [{firstName: 'Howdy ' + i,lastName: 'Boo' + i}])
 
-const fetchCount = async () => 2
+// const fetchCount = async (...args) => console.log('fetching count', ...args) || count
+
+const fetchRows = async (...args) => {
+  console.log('fetching rows', ...args)
+  const r = await users(...args)
+  return r.rows
+}
+
+const fetchCount = async (...args) => {
+  console.log('fetching count', ...args)
+  const r = await users(...args)
+  return r.count
+}
 
 // const Content = () => {
 //   const {rows, count, page, pageSize, load} = useManfiest({ fetchCount, fetchRows })
