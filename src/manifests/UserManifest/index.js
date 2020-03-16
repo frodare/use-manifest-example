@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { Manifest, useCell, DefaultManifestTable, Debug } from 'use-manifest'
+import React, { useState, useEffect } from 'react'
+import { Manifest, DefaultControls, DefaultTable, Debug, useManifest } from 'use-manifest'
 
 import users from '../../services/users'
 import def from './definition'
 
-const count = 1000
+// const count = 1000
 
 // const fetchRows = async (...args) => console.log('fetching rows', ...args) || new Array(count).fill(null).map((_,i) => [{firstName: 'Howdy ' + i,lastName: 'Boo' + i}])
 
@@ -29,6 +29,23 @@ const fetchCount = async (...args) => {
 
 // }
 
+const trPropsHandler = d => {
+  //console.log(d)
+}
+
+
+const Updater = ({  initialValues }) => {
+  const { updateState } = useManifest()
+  useEffect(() => {
+    updateState({ pageSize: 2, page: 20, sorts: [{id: "firstName", direction: "ASCENDING"}, {id: "lastName", direction: "DESCENDING"}] })
+  }, [])
+  return null
+} 
+
+
+const pageSizes = [10, 35, 101]
+const pageSizeLableGenerator = size => `(${size}) Display Amount`
+const statusMessageGenerator = ({ count, lastOnPage, firstOnPage }) => count < 1 ? 'No Results' : `${firstOnPage} - ${lastOnPage} / ${count}`
 
 export default () => {
 
@@ -45,7 +62,9 @@ export default () => {
         <button onClick={() => setFilter()}>All</button>
       </div>
       <Manifest fetchRows={fetchRows} fetchCount={fetchCount} filter={{ active: filter }} definition={def}>
-        <DefaultManifestTable />
+        <Updater />
+        <DefaultTable trPropsHandler={trPropsHandler} />
+        <DefaultControls pageSizes={pageSizes} pageSizeLableGenerator={pageSizeLableGenerator} statusMessageGenerator={statusMessageGenerator} />
         <Debug />
       </Manifest>
     </div>

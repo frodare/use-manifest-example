@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './App.css'
-import { Manifest, useCell } from 'use-manifest'
-import fetch from './fetch'
+// import { Manifest, useCell } from 'use-manifest'
+// import fetch from './fetch'
 import 'use-manifest/dist/index.css'
 
-import users from './services/users'
+// import users from './services/users'
 
 import UserManifest from './manifests/UserManifest'
 
