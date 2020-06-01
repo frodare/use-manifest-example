@@ -38,7 +38,7 @@ const Updater = ({  initialValues }) => {
   const { updateState } = useManifest()
   useEffect(() => {
     updateState({ pageSize: 2, page: 20, sorts: [{id: "firstName", direction: "ASCENDING"}, {id: "lastName", direction: "DESCENDING"}] })
-  }, [])
+  }, [updateState])
   return null
 } 
 
