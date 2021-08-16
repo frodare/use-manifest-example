@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Manifest, DefaultControls, DefaultTable, Debug, useManifest } from 'use-manifest'
 
 import users from '../../services/users'
 import def from './definition'
+import './index.css'
 
 // const count = 1000
 
@@ -11,22 +12,23 @@ import def from './definition'
 // const fetchCount = async (...args) => console.log('fetching count', ...args) || count
 
 const fetchRows = async (...args) => {
-  console.log('fetching rows', ...args)
+  // console.log('FETCHING ROWS', args)
   const r = await users(...args)
   return r.rows
 }
 
+const sleep = delay => new Promise((resolve, reject) => setTimeout(resolve, delay))
+
 const fetchCount = async (...args) => {
-  console.log('fetching count', ...args)
+  // console.log('***FETCHING COUNT', args)
   const r = await users(...args)
+  await sleep(5000)
   return r.count
 }
 
 // const Content = () => {
-//   const {rows, count, page, pageSize, load} = useManfiest({ fetchCount, fetchRows })
-//   const rows = useManfiestRows()
-
-
+//   const {rows, count, page, pageSize, load} = useManifest({ fetchCount, fetchRows })
+//   const rows = useManifestRows()
 // }
 
 const trPropsHandler = d => {
@@ -37,36 +39,53 @@ const trPropsHandler = d => {
 const Updater = ({  initialValues }) => {
   const { updateState } = useManifest()
   useEffect(() => {
-    updateState({ pageSize: 2, page: 20, sorts: [{id: "firstName", direction: "ASCENDING"}, {id: "lastName", direction: "DESCENDING"}] })
+    updateState({ pageSize: 2, page: 0, sorts: [{ id: "id", direction: "ASCENDING" }, { id: "lastName", direction: "DESCENDING" }] })
   }, [updateState])
   return null
-} 
+}
 
 
 const pageSizes = [10, 35, 101]
-const pageSizeLableGenerator = size => `(${size}) Display Amount`
-const statusMessageGenerator = ({ count, lastOnPage, firstOnPage }) => count < 1 ? 'No Results' : `${firstOnPage} - ${lastOnPage} / ${count}`
+const pageSizeLabelGenerator = size => `(${size}) Display Amount`
+const statusMessageGenerator = ({ count, lastOnPage, firstOnPage }) => {
+  if (!count) {
+    return null
+  }
+  if (count < 1) {
+    return 'No Results'
+  }
+  return `${firstOnPage} - ${lastOnPage} / ${count}`
+}
 
-export default () => {
-
-  const [filter, setFilter] = useState()
-
-
+const Component = () => {
+  const { setFilter, setPage } = useManifest()
+  const _setPage = page => setPage(page - 1)
   return (
-    <div className='App'>
-      <button onClick={() => setFilter('test')}>test</button>
-
-      <div>
-        <button onClick={() => setFilter(true)}>Active</button>
-        <button onClick={() => setFilter(false)}>Inactive</button>
-        <button onClick={() => setFilter()}>All</button>
+    <>
+      <div className='section'>
+        <button onClick={() => setFilter({ active: true })} > Active</button>
+        <button onClick={() => setFilter({ active: false })} > Inactive</button>
+        <button onClick={() => setFilter({ active: undefined })} > All</button>
       </div>
-      <Manifest fetchRows={fetchRows} fetchCount={fetchCount} filter={{ active: filter }} definition={def}>
-        <Updater />
+      {/* <Updater /> */}
+      <div className='section'>
         <DefaultTable trPropsHandler={trPropsHandler} />
-        <DefaultControls pageSizes={pageSizes} pageSizeLableGenerator={pageSizeLableGenerator} statusMessageGenerator={statusMessageGenerator} />
-        <Debug />
-      </Manifest>
-    </div>
+      </div>
+      <div className='section'>
+        <DefaultControls pageSizes={pageSizes} pageSizeLabelGenerator={pageSizeLabelGenerator} statusMessageGeneratorD={statusMessageGenerator} />
+      </div>
+      <div className='section'>
+        <input type="text" id="pageField" name="pageField" />
+        <button onClick={() => _setPage(document.getElementById('pageField').value)}>Go To Page</button>
+      </div>
+      <Debug />
+    </>
   )
 }
+
+export default () =>
+  <div className='App'>
+    <Manifest fetchRows={fetchRows} fetchCount3={fetchCount} definition={def}>
+      <Component />
+      </Manifest>
+  </div>
