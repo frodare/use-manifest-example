@@ -1,3 +1,16 @@
 .section {
   margin-bottom: 1rem;
 }
+
+.button-bar {
+  margin-top: 1rem;
+}
+
+.manifest-status {
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.align-right {
+  margin-left: 00px;
+}

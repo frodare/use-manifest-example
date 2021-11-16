@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Manifest, DefaultControls, DefaultTable, Debug, useManifest } from 'use-manifest'
 
 import users from '../../services/users'
@@ -22,7 +22,7 @@ const sleep = delay => new Promise((resolve, reject) => setTimeout(resolve, dela
 const fetchCount = async (...args) => {
   // console.log('***FETCHING COUNT', args)
   const r = await users(...args)
-  await sleep(5000)
+  // await sleep(6000)
   return r.count
 }
 
@@ -57,15 +57,17 @@ const statusMessageGenerator = ({ count, lastOnPage, firstOnPage }) => {
   return `${firstOnPage} - ${lastOnPage} / ${count}`
 }
 
-const Component = () => {
+const Component = ({ useFetchCount, setUseFetchCount }) => {
   const { setFilter, setPage } = useManifest()
   const _setPage = page => setPage(page - 1)
   return (
     <>
       <div className='section'>
-        <button onClick={() => setFilter({ active: true })} > Active</button>
-        <button onClick={() => setFilter({ active: false })} > Inactive</button>
-        <button onClick={() => setFilter({ active: undefined })} > All</button>
+        <button className='button-bar' onClick={() => setFilter({ active: true })} >Active</button>
+        <button className='button-bar' onClick={() => setFilter({ active: false })} >Inactive</button>
+        <button className='button-bar' onClick={() => setFilter({ active: undefined })} >All</button>
+        <button className='button-bar' onClick={() => setFilter({ active: 'none' })} >None</button>
+        <button className='align-right' onClick={() => setUseFetchCount(!useFetchCount)} >Toggle Use Fetch Count</button>
       </div>
       {/* <Updater /> */}
       <div className='section'>
@@ -83,9 +85,13 @@ const Component = () => {
   )
 }
 
-export default () =>
-  <div className='App'>
-    <Manifest fetchRows={fetchRows} fetchCount3={fetchCount} definition={def}>
-      <Component />
+export default () => {
+  const [useFetchCount, setUseFetchCount] = useState(true)
+  return (
+    <div className='App'>
+      <Manifest fetchRows={fetchRows} fetchCount={useFetchCount ? fetchCount : null} definition={def}>
+        <Component useFetchCount={useFetchCount} setUseFetchCount={setUseFetchCount} />
       </Manifest>
-  </div>
+    </div>
+  )
+}
